@@ -27,11 +27,12 @@
 
       function update() {
         if (reimu !== null) {
-          reimu.body.velocity.x = 0;
+          reimu.body.velocity.x = 0; // stop all movement
           reimu.body.velocity.y = 0;
 
           var movespeed = 250;
 
+          // detect keyboard movement
           if (cursors.left.isDown) {
             reimu.body.velocity.x = -movespeed;
             lastDirection = [-1,0];
@@ -50,6 +51,7 @@
             lastDirection = [0, 1];
           }
 
+          // handle bullets.  bullets should move faster than regular movement speed.
           if (fireButton.isDown && (reimuLastFired + 300 < game.time.now)) {
 
             var bullet = reimuBullets.getFirstExists(false);
@@ -74,8 +76,6 @@
         }
 
         game.physics.arcade.overlap(marisa,reimuBullets, enemyGotHit, null, this);
-
-//        console.log('test');
       }
 
       function create() {
@@ -108,6 +108,7 @@
         cursors = game.input.keyboard.createCursorKeys();
         fireButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
 
+        // HP counts
         gameTextR = game.add.text(10, 25, reimu_hp.toString(), { font: '36px Arial', fill: '#fff' });
         gameTextM = game.add.text(game.world.width - 100, 25, marisa_hp.toString(), { font: '36px Arial', fill: '#fff' });
 
@@ -120,6 +121,7 @@
 
       }
 
+      // handles collisions if enemy gets hit
       function enemyGotHit(marisa, bullet) {
         if (marisa_hp <= 0) return;
 
@@ -127,7 +129,6 @@
           marisa.kill();
         }
         bullet.kill();
-
 
         updateHP();
       }
