@@ -22,7 +22,7 @@
         game.load.image('yinyang', 'img/yinyang.png?foo');
         game.load.image('reimu-bullet', 'img/reimu-bullet.png');
         game.load.image('marisa', 'img/marisa.png');
-        game.load.image('grass', 'img/grass.jpg');
+        game.load.image('grass', 'img/grass.jpg?');
       }
 
       function update() {
@@ -84,11 +84,12 @@
         //  The background
         starfield = game.add.tileSprite(0, 0, 800, 600, 'grass');
 
-
+        // init the player
         reimu = game.add.sprite(game.world.centerX, game.world.centerY, 'reimu');
         reimu.anchor.setTo(0.5, 0.5);
         game.physics.arcade.enable(reimu);
 
+        // init player bullets
         reimuBullets = game.add.group();
         reimuBullets.enableBody = true;
         reimuBullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -98,12 +99,14 @@
         reimuBullets.setAll('outOfBoundsKill', true);
         reimuBullets.setAll('checkWorldBounds', true);
 
+        // punching bag
         marisa = game.add.sprite(600, 500, 'marisa');
         marisa.anchor.setTo(0.5, 0.5);
         game.physics.arcade.enable(marisa);
 
+        // handle inputs
         cursors = game.input.keyboard.createCursorKeys();
-        fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        fireButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
 
         gameTextR = game.add.text(10, 25, reimu_hp.toString(), { font: '36px Arial', fill: '#fff' });
         gameTextM = game.add.text(game.world.width - 100, 25, marisa_hp.toString(), { font: '36px Arial', fill: '#fff' });
