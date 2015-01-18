@@ -1,11 +1,13 @@
     window.onload = function() {
   //    var cursors, fireButton, bombButton;
 
-      var reimu, reimuBullets, reimu_hp = 100;
+      var reimu, reimuBullets, reimu_hp = 99;
       var lastDirection = [0,-1];
       var reimuLastFired = 0;
 
-      var marisa, marisa_hp = 100;
+      var marisa, marisa_hp = 99;
+
+      var gameTextR, gameTextM;
 
       var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
         preload: preload,
@@ -20,6 +22,7 @@
         game.load.image('yinyang', 'img/yinyang.png?foo');
         game.load.image('reimu-bullet', 'img/reimu-bullet.png');
         game.load.image('marisa', 'img/marisa.png');
+        game.load.image('grass', 'img/grass.jpg');
       }
 
       function update() {
@@ -70,11 +73,17 @@
 
         }
 
+        game.physics.arcade.overlap(marisa,reimuBullets, enemyGotHit, null, this);
+
 //        console.log('test');
       }
 
       function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
+
+        //  The background
+        starfield = game.add.tileSprite(0, 0, 800, 600, 'grass');
+
 
         reimu = game.add.sprite(game.world.centerX, game.world.centerY, 'reimu');
         reimu.anchor.setTo(0.5, 0.5);
@@ -89,14 +98,35 @@
         reimuBullets.setAll('outOfBoundsKill', true);
         reimuBullets.setAll('checkWorldBounds', true);
 
-        marisa = game.add.sprite(600, 600, 'marisa');
+        marisa = game.add.sprite(600, 500, 'marisa');
         marisa.anchor.setTo(0.5, 0.5);
         game.physics.arcade.enable(marisa);
 
         cursors = game.input.keyboard.createCursorKeys();
         fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
+        gameTextR = game.add.text(10, 25, reimu_hp.toString(), { font: '36px Arial', fill: '#fff' });
+        gameTextM = game.add.text(game.world.width - 100, 25, marisa_hp.toString(), { font: '36px Arial', fill: '#fff' });
 
+        updateHP();
+      }
+
+      function updateHP() {
+        gameTextR.setText(reimu_hp.toString());
+        gameTextM.setText(marisa_hp.toString());
+
+      }
+
+      function enemyGotHit(marisa, bullet) {
+        if (marisa_hp <= 0) return;
+
+        if (--marisa_hp === 0) {
+          marisa.kill();
+        }
+        bullet.kill();
+
+
+        updateHP();
       }
 
 };
